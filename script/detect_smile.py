@@ -2,7 +2,7 @@
 
 # USAGE
 # python detect_smile.py --cascade haarcascade_frontalface_default.xml \
-#	--model output/lenet.hdf5 
+#	--model output/lenet.hdf5
 
 # import the necessary packages
 
@@ -19,8 +19,8 @@ import imutils
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-c", "--cascade", required=True,
-	help="path to where the face cascade resides")
+# ap.add_argument("-c", "--cascade", required=True,
+# 	help="path to where the face cascade resides")
 ap.add_argument("-m", "--model", required=True,
 	help="path to pre-trained smile detector CNN")
 ap.add_argument("-v", "--video",
@@ -57,7 +57,7 @@ while True:
 
 	# detect faces in the input frame, then clone the frame so that
 	# we can draw on it
-	rects = detector.detectMultiScale(gray, scaleFactor=1.1, 
+	rects = detector.detectMultiScale(gray, scaleFactor=1.1,
 		minNeighbors=5, minSize=(30, 30),
 		flags=cv2.CASCADE_SCALE_IMAGE)
 

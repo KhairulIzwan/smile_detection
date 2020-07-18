@@ -19,6 +19,7 @@ import numpy as np
 import argparse
 import imutils
 import os
+import time
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
@@ -44,8 +45,11 @@ for imagePath in sorted(list(paths.list_images(args["dataset"]))):
 
 	# extract the class label from the image path and update the
 	# labels list
-	label = imagePath.split(os.path.sep)[-3]
-	label = "smiling" if label == "positives" else "not_smiling"
+	label = imagePath.split(os.path.sep)[-2]
+	# print(label)
+	# time.sleep(1)
+
+	label = "fruit" if label == "pos" else "not_fruit"
 	labels.append(label)
 
 # scale the raw pixel intensities to the range [0, 1]
