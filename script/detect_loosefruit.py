@@ -32,45 +32,6 @@ ap.add_argument("-m", "--model", required=True, help="path to pre-trained smile 
 ap.add_argument("-i", "--image", required=True, help="path to the image")
 args = vars(ap.parse_args())
 
-#load the color_analysis
-
-# STEP 1: Load an image
-image = cv2.imread(args["image"])
-
-#STEP 1a: copy original
-image_orig = image.copy()
-
-#STEP 2 : colorspace(convert image to hsv)
-hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-
-#STEP 3: Masking
-#range for lower red
-lower_red = np.array([0,120,70])
-upper_red = np.array([10,255,255])
-mask1 = cv2.inRange(hsv, lower_red, upper_red)
-
-#range for upper red
-lower_red = np.array([170,120,70])
-upper_red = np.array([180,255,255])
-mask2 = cv2.inRange(hsv, lower_red, upper_red)
-
-#generating the final mask to detect the red color
-mask= mask1 + mask2
-cv2.imshow("final mask", mask)
-
-#apply the filtering process
-mask = cv2.erode(mask, None, iterations=1)
-mask = cv2.dilate(mask, None, iterations=1)
-cv2.imshow("after filtering", mask)
-
-#segmentating the cloth out of the frame using bitwise and woth the invterted mask
-res1 = cv2.bitwise_and(image, mask=mask)
-cv2.imshow("res", res1)
-
-#STEP 4 : counting and labelling
-labels = measure.label(mask, neighbors=8, background=0)
-mask = np.zeros(mask.shape, dtype="uint8")
-
 #LOAD MODEL=LENET.HDF5
 model = load_model(args["model"])
 
@@ -85,6 +46,7 @@ while True :
     #STEP 2 : colorspace(convert image to hsv)
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
+    #STEP 3: masking
     lower_red = np.array([0,120,70])
     upper_red = np.array([10,255,255])
     mask1 = cv2.inRange(hsv, lower_red, upper_red)
@@ -103,23 +65,19 @@ while True :
     mask = cv2.dilate(mask, None, iterations=1)
     cv2.imshow("after filtering", mask)
 
+    #STEP 4: Counting and labelling
     labels = measure.label(mask, neighbors=8, background=0)
     mask = np.zeros(mask.shape, dtype="uint8")
 
     for label in np.unique(labels):
-	# if this is the background label, ignore it
-	   if label == 0:
-		         continue
-	   # otherwise, construct the label mask and count the
-	   # number of pixels
-	   labelMask = np.zeros(mask.shape, dtype="uint8")
-	   labelMask[labels == label] = 255
-	   numPixels = cv2.countNonZero(labelMask)
-	# if the number of pixels in the component is sufficiently
+        if label == 0:
+            continue
+        labelMask = np.zeros(mask.shape, dtype="uint8")
+        labelMask[labels == label] = 255
+        numPixels = cv2.countNonZero(labelMask)
 
-	# large, then add it to our mask of "large blobs"
-	   if numPixels > 185:
-	          mask = cv2.add(mask, labelMask)
+        if numPixels > 185:
+            mask = cv2.add(mask, labelMask)
 
     cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
 	   cv2.CHAIN_APPROX_SIMPLE)
@@ -141,8 +99,8 @@ while True :
          (notFruit, fruit) = model.predict(roi)[0]
          label = "Fruit" if fruit > notFruit else "Not fruit"
 
-          cv2.circle(image, (int(cX), int(cY)), int(radius), (255, 255, 255), 2)
-          cv2.putText(image, "#{}".format(i + 1), (x, y - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255, 255, 255), 2)
+         cv2.circle(image, (int(cX), int(cY)), int(radius), (255, 255, 255), 2)
+         cv2.putText(image, "#{}".format(i + 1), (x, y - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255, 255, 255), 2)
 
          cv2.imshow("Fruit", image_orig)
 
