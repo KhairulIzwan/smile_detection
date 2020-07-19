@@ -18,12 +18,12 @@ from tensorflow.keras.models import load_model
 import numpy as np
 import argparse
 import imutils
-from skimage import measure
-from imutils import contours
+# from skimage import measure
+# from imutils import contours
 
-import os
+# import os
 
-count = 0
+# count = 0
 
 #construct the argument parse and parse the argument
 
@@ -65,25 +65,26 @@ while True :
     mask = cv2.dilate(mask, None, iterations=1)
     cv2.imshow("after filtering", mask)
 
-    #STEP 4: Counting and labelling
-    labels = measure.label(mask, neighbors=8, background=0)
-    mask = np.zeros(mask.shape, dtype="uint8")
+    # #STEP 4: Counting and labelling
+    # labels = measure.label(mask, neighbors=8, background=0)
+    # mask = np.zeros(mask.shape, dtype="uint8")
+    #
+    # for label in np.unique(labels):
+    #     if label == 0:
+    #         continue
+    #     labelMask = np.zeros(mask.shape, dtype="uint8")
+    #     labelMask[labels == label] = 255
+    #     numPixels = cv2.countNonZero(labelMask)
+    #
+    #     if numPixels > 185:
+    #         mask = cv2.add(mask, labelMask)
+    #
+    # cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
+	#    cv2.CHAIN_APPROX_SIMPLE)
+    # cnts = imutils.grab_contours(cnts)
+    # cnts = contours.sort_contours(cnts)[0]
 
-    for label in np.unique(labels):
-        if label == 0:
-            continue
-        labelMask = np.zeros(mask.shape, dtype="uint8")
-        labelMask[labels == label] = 255
-        numPixels = cv2.countNonZero(labelMask)
-
-        if numPixels > 185:
-            mask = cv2.add(mask, labelMask)
-
-    cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
-	   cv2.CHAIN_APPROX_SIMPLE)
-    cnts = imutils.grab_contours(cnts)
-    cnts = contours.sort_contours(cnts)[0]
-
+    #loop over the loosefruit bounding circle
     for (i, c) in enumerate(cnts):
          # draw the bright spot on the image
          (x, y, w, h) = cv2.boundingRect(c)
@@ -102,7 +103,7 @@ while True :
          cv2.circle(image, (int(cX), int(cY)), int(radius), (255, 255, 255), 2)
          cv2.putText(image, "#{}".format(i + 1), (x, y - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255, 255, 255), 2)
 
-         cv2.imshow("Fruit", image_orig)
+         cv2.imshow("Fruit", image)
 
     if cv2.waitKey(1) & 0xFF == ord("q"):
     	break

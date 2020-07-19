@@ -19,8 +19,8 @@ import imutils
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
-# ap.add_argument("-c", "--cascade", required=True,
-# 	help="path to where the face cascade resides")
+ap.add_argument("-c", "--cascade", required=True,
+	help="path to where the face cascade resides")
 ap.add_argument("-m", "--model", required=True,
 	help="path to pre-trained smile detector CNN")
 ap.add_argument("-v", "--video",
