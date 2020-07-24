@@ -2,9 +2,8 @@
 
 # import the necessary packages
 
-# ImportError: No module named ‘cv2’ Python3
-import sys
-sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
+#import sys
+#sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
 import cv2
 
 from sklearn.preprocessing import LabelEncoder
