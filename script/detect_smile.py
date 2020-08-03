@@ -1,24 +1,12 @@
 #!/usr/bin/env python
 
-# USAGE
-# python detect_smile.py --cascade haarcascade_frontalface_default.xml \
-#	--model output/lenet.hdf5
-
-# import the necessary packages
-
-# ImportError: No module named 'cv2' Python3
-#import sys
-#sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
-import cv2
-
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.models import load_model
 
 import numpy as np
 import argparse
 import imutils
-
-
+import cv2
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
