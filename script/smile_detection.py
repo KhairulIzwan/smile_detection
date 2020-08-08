@@ -49,7 +49,7 @@ class SmileDetector:
 
 		# Import model files
 		self.p = os.path.sep.join([self.rospack.get_path('smile_detection')])
-		self.libraryDir = os.path.join(self.p, "model")
+		self.libraryDir = os.path.join(self.p, "script/model")
 
 		self.model = self.libraryDir + "/lenet_smile_detection.hdf5"
 
